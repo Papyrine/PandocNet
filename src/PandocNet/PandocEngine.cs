@@ -1,8 +1,9 @@
 ﻿namespace Pandoc;
 
-public class PandocEngine(string? pandocPath = null)
+public class PandocEngine(string? pandocPath = null, IPandocHttpClient? httpClient = null)
 {
     internal string pandocPath = pandocPath ?? "pandoc";
+    IPandocHttpClient httpClient = httpClient ?? new DefaultPandocHttpClient();
 
     public virtual async Task<StringResult> ConvertToText<TIn, TOut>(
         Input input,
@@ -30,7 +31,7 @@ public class PandocEngine(string? pandocPath = null)
     {
         inOptions ??= new();
         outOptions ??= new();
-        var source = input.GetPipeSource();
+        var source = input.GetPipeSource(httpClient);
         var target = output.GetPipeTarget();
         var errors = new StringBuilder();
         var arguments = new List<string>(Options.GetArguments(options))

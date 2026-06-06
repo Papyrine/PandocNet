@@ -36,7 +36,7 @@ public class Input
     public static implicit operator Input(Stream stream) => new(stream);
     public static implicit operator Input(byte[] bytes) => new(bytes);
 
-    public PipeSource GetPipeSource()
+    public PipeSource GetPipeSource(IPandocHttpClient httpClient)
     {
         if (file != null)
         {
@@ -55,8 +55,12 @@ public class Input
 
         if (url != null)
         {
-            var stream = HttpCache.Default.Stream(url);
-            return PipeSource.FromStream(stream);
+            return PipeSource.Create(
+                async (destination, cancel) =>
+                {
+                    using var stream = await httpClient.GetStream(url, cancel);
+                    await stream.CopyToAsync(destination, cancel);
+                });
         }
 
         if (content != null)
