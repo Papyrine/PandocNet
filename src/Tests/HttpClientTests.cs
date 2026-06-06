@@ -1,7 +1,7 @@
 [TestFixture]
 public class HttpClientTests
 {
-    class FakePandocHttpClient : IPandocHttpClient
+    class FakePandocHttpClient
     {
         public string? RequestedUrl;
 
@@ -17,7 +17,7 @@ public class HttpClientTests
     public async Task UrlInputUsesProvidedHttpClient()
     {
         var httpClient = new FakePandocHttpClient();
-        var engine = new PandocEngine(httpClient: httpClient);
+        var engine = new PandocEngine(getStreamFromUrl: httpClient.GetStream);
 
         var result = await engine.ConvertToText<CommonMarkIn, HtmlOut>("https://example.com/sample.md");
 

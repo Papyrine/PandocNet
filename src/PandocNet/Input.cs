@@ -1,4 +1,4 @@
-﻿namespace Pandoc;
+namespace Pandoc;
 
 public class Input
 {
@@ -36,7 +36,7 @@ public class Input
     public static implicit operator Input(Stream stream) => new(stream);
     public static implicit operator Input(byte[] bytes) => new(bytes);
 
-    public PipeSource GetPipeSource(IPandocHttpClient httpClient)
+    public PipeSource GetPipeSource(Func<string, Cancel, Task<Stream>> getStreamFromUrl)
     {
         if (file != null)
         {
@@ -58,8 +58,8 @@ public class Input
             return PipeSource.Create(
                 async (destination, cancel) =>
                 {
-                    using var stream = await httpClient.GetStream(url, cancel);
-                    await stream.CopyToAsync(destination, cancel);
+                    using var stream = await getStreamFromUrl(url, cancel);
+                    await stream.CopyToAsync(destination, cancel).ConfigureAwait(false);
                 });
         }
 

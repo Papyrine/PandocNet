@@ -1,9 +1,6 @@
 namespace Pandoc;
 
-class DefaultPandocHttpClient : IPandocHttpClient
+internal static class DefaultPandocHttpClient
 {
-    static HttpClient httpClient = new();
-
-    public Task<Stream> GetStream(string url, Cancel cancel = default) =>
-        httpClient.GetStreamAsync(url, cancel);
+    internal static HttpClient Instance = new();
 }
