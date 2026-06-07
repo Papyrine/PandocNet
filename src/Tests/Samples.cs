@@ -65,7 +65,7 @@ public class Samples
         var factory = provider.GetRequiredService<IHttpClientFactory>();
 
         // Adapt the IHttpClientFactory to the Func<HttpClient> the engine expects
-        var engine = new PandocEngine(httpClientFactory: () => factory.CreateClient());
+        var engine = new PandocEngine(httpClientFactory: factory.CreateClient);
 
         var result = await engine.ConvertToText<CommonMarkIn, HtmlOut>(
             "https://raw.githubusercontent.com/Papyrine/PandocNet/main/readme.md");
@@ -90,7 +90,7 @@ public class Samples
         var factory = provider.GetRequiredService<IHttpClientFactory>();
 
         // Downloads of url inputs are now cached to disk
-        var engine = new PandocEngine(httpClientFactory: () => factory.CreateClient());
+        var engine = new PandocEngine(httpClientFactory: factory.CreateClient);
 
         var result = await engine.ConvertToText<CommonMarkIn, HtmlOut>(
             "https://raw.githubusercontent.com/Papyrine/PandocNet/main/readme.md");
