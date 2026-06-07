@@ -3,7 +3,7 @@
 [![Build status](https://img.shields.io/appveyor/build/SimonCropp/PandocNet)](https://ci.appveyor.com/project/SimonCropp/PandocNet)
 [![NuGet Status](https://img.shields.io/nuget/v/Pandoc.svg)](https://www.nuget.org/packages/Pandoc/)
 
-Conversion of documents via [Pandoc](https://pandoc.org/). Wraps pandoc.exe using [CliWrap](https://github.com/Tyrrrz/CliWrap) and provides strong typed options for document formats.
+Conversion of documents via [Pandoc](https://pandoc.org/). Wraps pandoc.exe and provides strong typed options for document formats.
 
 **See [Milestones](../../milestones?state=closed) for release notes.**
 

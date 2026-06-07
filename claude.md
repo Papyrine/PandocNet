@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-PandocNet is a .NET wrapper library for [Pandoc](https://pandoc.org/) (the universal document converter). It provides strongly-typed C# option classes for each input/output format and uses CliWrap for process execution. Published as the `Pandoc` NuGet package.
+PandocNet is a .NET wrapper library for [Pandoc](https://pandoc.org/) (the universal document converter). It provides strongly-typed C# option classes for each input/output format and uses the standard `System.Diagnostics.Process` API for process execution. Published as the `Pandoc` NuGet package.
 
 ## Build & Test Commands
 
@@ -37,7 +37,7 @@ Pandoc must be installed locally (`choco install pandoc` on Windows). Tests targ
 **Core conversion flow:**
 1. Caller invokes `Convert<TIn, TOut>()` (stream/file output) or `ConvertToText<TIn, TOut>()` (string output), with generic type params being format option classes (e.g. `CommonMarkIn`, `HtmlOut`)
 2. Engine collects CLI arguments from the option objects via `GetArguments()` virtual methods
-3. CliWrap executes pandoc with piped stdin/stdout
+3. `System.Diagnostics.Process` executes pandoc with piped stdin/stdout (stdin source streamed via `Input.WriteTo`, stdout target streamed via `Output.ReadFrom`)
 4. Exit code is checked against `ErrorCodes` mapping; result returned as `Result` or `StringResult`
 
 **Input/Output abstraction:**
