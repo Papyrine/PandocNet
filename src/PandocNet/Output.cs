@@ -19,22 +19,26 @@ public class Output
     public static implicit operator Output(Stream stream) => new(stream);
     public static implicit operator Output(StringBuilder stringBuilder) => new(stringBuilder);
 
-    public PipeTarget GetPipeTarget()
+    public async Task ReadFrom(Stream source, Cancel cancel)
     {
         if (stringBuilder != null)
         {
-            return PipeTarget.ToStringBuilder(stringBuilder);
+            using var reader = new StreamReader(source, Encoding.UTF8);
+            stringBuilder.Append(await reader.ReadToEndAsync(cancel));
+            return;
         }
 
         if (file != null)
         {
-            File.Delete(file);
-            return PipeTarget.ToFile(file);
+            await using var fileStream = File.Create(file);
+            await source.CopyToAsync(fileStream, cancel);
+            return;
         }
 
         if (stream != null)
         {
-            return PipeTarget.ToStream(stream);
+            await source.CopyToAsync(stream, cancel);
+            return;
         }
 
         throw new("Unknown output");

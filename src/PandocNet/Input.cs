@@ -36,38 +36,40 @@ public class Input
     public static implicit operator Input(Stream stream) => new(stream);
     public static implicit operator Input(byte[] bytes) => new(bytes);
 
-    public PipeSource GetPipeSource(HttpClient client)
+    public async Task WriteTo(Stream destination, HttpClient client, Cancel cancel)
     {
         if (file != null)
         {
-            return PipeSource.FromFile(file);
+            await using var fileStream = File.OpenRead(file);
+            await fileStream.CopyToAsync(destination, cancel);
+            return;
         }
 
         if (stream != null)
         {
-            return PipeSource.FromStream(stream);
+            await stream.CopyToAsync(destination, cancel);
+            return;
         }
 
         if (bytes != null)
         {
-            return PipeSource.FromBytes(bytes);
+            await destination.WriteAsync(bytes, cancel);
+            return;
         }
 
         if (url != null)
         {
-            return PipeSource.Create(
-                async (destination, cancellation) =>
-                {
-                    await using var stream = await client.GetStreamAsync(url, cancellation);
-                    await stream.CopyToAsync(destination, cancellation);
-                });
+            await using var urlStream = await client.GetStreamAsync(url, cancel);
+            await urlStream.CopyToAsync(destination, cancel);
+            return;
         }
 
         if (content != null)
         {
-            return PipeSource.FromString(content, Encoding.UTF8);
+            await destination.WriteAsync(Encoding.UTF8.GetBytes(content), cancel);
+            return;
         }
 
-        throw new("Unknown output");
+        throw new("Unknown input");
     }
 }

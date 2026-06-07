@@ -115,6 +115,27 @@ public class Tests
     }
 
     [Test]
+    public async Task TextFromBytes()
+    {
+        var bytes = "*text*"u8.ToArray();
+
+        var (command, value) = await PandocInstance.ConvertToText<CommonMarkIn, HtmlOut>(bytes);
+
+        await Verify(value, "html")
+            .AppendValue("command", command);
+    }
+
+    [Test]
+    public void ErrorCodeThrows()
+    {
+        var exception = Assert.ThrowsAsync<Exception>(
+            () => PandocInstance.ConvertToText<JsonIn, HtmlOut>("not valid json"));
+
+        // CheckErrorCodes formats the mapped error type, the command, and stderr
+        Assert.That(exception!.Message, Does.Contain("pandoc --output=- --from=json --to=html"));
+    }
+
+    [Test]
     [Explicit]
     public async Task CustomOptions()
     {

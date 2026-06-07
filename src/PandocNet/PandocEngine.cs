@@ -35,9 +35,6 @@ public class PandocEngine(string? pandocPath = null, Func<HttpClient>? httpClien
     {
         inOptions ??= new();
         outOptions ??= new();
-        var source = input.GetPipeSource(GetHttpClient());
-        var target = output.GetPipeTarget();
-        var errors = new StringBuilder();
         var arguments = new List<string>(Options.GetArguments(options))
         {
             // Force binary to stdout
@@ -45,22 +42,59 @@ public class PandocEngine(string? pandocPath = null, Func<HttpClient>? httpClien
         };
         arguments.AddRange(inOptions.GetArguments());
         arguments.AddRange(outOptions.GetArguments());
-        var command = Cli.Wrap(pandocPath)
-            .WithArguments(arguments)
-            .WithStandardOutputPipe(target)
-            .WithStandardInputPipe(source)
-            .WithStandardErrorPipe(PipeTarget.ToStringBuilder(errors))
-            .WithValidation(CommandResultValidation.None);
 
-        var result = await command.ExecuteAsync(cancel);
-        CheckErrorCodes(result, errors, command);
-        return new(command.ToString());
+        var command = CommandFormatter.Build(pandocPath, arguments);
+
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = pandocPath,
+            RedirectStandardInput = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+        foreach (var argument in arguments)
+        {
+            startInfo.ArgumentList.Add(argument);
+        }
+
+        using var process = new Process
+        {
+            StartInfo = startInfo
+        };
+        process.Start();
+
+        var inputTask = PipeInput(process, input, cancel);
+        var outputTask = output.ReadFrom(process.StandardOutput.BaseStream, cancel);
+        var errorTask = process.StandardError.ReadToEndAsync(cancel);
+
+        await Task.WhenAll(inputTask, outputTask, errorTask);
+        await process.WaitForExitAsync(cancel);
+
+        CheckErrorCodes(process.ExitCode, await errorTask, command);
+        return new(command);
     }
 
-    static void CheckErrorCodes(CommandResult result, StringBuilder errors, Command command)
+    async Task PipeInput(Process process, Input input, Cancel cancel)
     {
-        var exitCode = result.ExitCode;
+        var stream = process.StandardInput.BaseStream;
+        try
+        {
+            await input.WriteTo(stream, GetHttpClient(), cancel);
+            await stream.FlushAsync(cancel);
+        }
+        catch (IOException)
+        {
+            // pandoc closed stdin early (e.g. it errored before reading all input);
+            // swallow the broken pipe so the real exit code surfaces below
+        }
 
+        process.StandardInput.Close();
+    }
+
+    static void CheckErrorCodes(int exitCode, string errors, string command)
+    {
         if (exitCode == 0)
         {
             return;

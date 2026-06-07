@@ -1,1 +1,1 @@
-﻿global using CliWrap;
+global using System.Diagnostics;
