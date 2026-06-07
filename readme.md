@@ -103,7 +103,51 @@ var html = await PandocInstance.ConvertToText(
         NumberOffsets = [3]
     });
 ```
-<sup><a href='/src/Tests/Samples.cs#L60-L83' title='Snippet source file'>snippet source</a> | <a href='#snippet-custom-options' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/Samples.cs#L107-L130' title='Snippet source file'>snippet source</a> | <a href='#snippet-custom-options' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
+
+
+### Url inputs
+
+When an input is a url, the engine downloads it using an `HttpClient`. By default a shared `HttpClient` is used. The download can be customized (proxies, headers, handlers, connection pooling) by passing a `Func<HttpClient>` to the engine. This keeps the library dependency free while integrating cleanly with `IHttpClientFactory`:
+
+<!-- snippet: http-client-factory -->
+<a id='snippet-http-client-factory'></a>
+```cs
+var services = new ServiceCollection();
+services.AddHttpClient();
+var provider = services.BuildServiceProvider();
+var factory = provider.GetRequiredService<IHttpClientFactory>();
+
+// Adapt the IHttpClientFactory to the Func<HttpClient> the engine expects
+var engine = new PandocEngine(httpClientFactory: () => factory.CreateClient());
+
+var result = await engine.ConvertToText<CommonMarkIn, HtmlOut>(
+    "https://raw.githubusercontent.com/Papyrine/PandocNet/main/readme.md");
+```
+<sup><a href='/src/Tests/Samples.cs#L60-L73' title='Snippet source file'>snippet source</a> | <a href='#snippet-http-client-factory' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
+
+For example, disk caching can be added by plugging in [Replicant](https://github.com/SimonCropp/Replicant):
+
+<!-- snippet: replicant-caching -->
+<a id='snippet-replicant-caching'></a>
+```cs
+// Wire Replicant disk caching into the http client pipeline
+var services = new ServiceCollection();
+services.AddReplicantCache("cacheDirectory");
+services.AddHttpClient(string.Empty)
+    .AddReplicantCaching();
+var provider = services.BuildServiceProvider();
+var factory = provider.GetRequiredService<IHttpClientFactory>();
+
+// Downloads of url inputs are now cached to disk
+var engine = new PandocEngine(httpClientFactory: () => factory.CreateClient());
+
+var result = await engine.ConvertToText<CommonMarkIn, HtmlOut>(
+    "https://raw.githubusercontent.com/Papyrine/PandocNet/main/readme.md");
+```
+<sup><a href='/src/Tests/Samples.cs#L82-L98' title='Snippet source file'>snippet source</a> | <a href='#snippet-replicant-caching' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 
