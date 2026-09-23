@@ -60,5 +60,5 @@ Pandoc must be installed locally (`choco install pandoc` on Windows). Tests targ
 
 ## CI/CD
 
-- AppVeyor builds on push (installs pandoc via Chocolatey, runs tests, publishes NuGet)
+- GitHub Actions builds on push (installs pandoc via Chocolatey, runs tests, uploads NuGet packages as artifacts)
 - GitHub Actions: auto-updates docs on push (`on-push-do-docs.yml`), auto-merges Dependabot PRs, manages milestone-based releases

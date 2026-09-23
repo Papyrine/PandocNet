@@ -1,6 +1,6 @@
 # <img src="/src/icon.png" height="30px"> PandocNet
 
-[![Build status](https://img.shields.io/appveyor/build/SimonCropp/PandocNet)](https://ci.appveyor.com/project/SimonCropp/PandocNet)
+[![Build status](https://github.com/Papyrine/PandocNet/actions/workflows/build.yml/badge.svg)](https://github.com/Papyrine/PandocNet/actions/workflows/build.yml)
 [![NuGet Status](https://img.shields.io/nuget/v/Pandoc.svg)](https://www.nuget.org/packages/Pandoc/)
 
 Conversion of documents via [Pandoc](https://pandoc.org/). Wraps pandoc.exe and provides strong typed options for document formats.

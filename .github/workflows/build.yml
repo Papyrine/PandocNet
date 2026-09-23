@@ -1,0 +1,59 @@
+name: build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+      # SponsorCheck bundles the sponsor list during pack on non-PR builds and needs a
+      # classic PAT (org secret). PR builds skip it.
+      GitHubToken: ${{ secrets.SPONSOR_CHECK_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pandoc
+        shell: pwsh
+        run: |
+          if ($isWindows) {
+            choco install pandoc -y --no-progress
+          }
+          if ($isLinux) {
+            sudo apt-get -yq install pandoc
+          }
+          if ($isMacOS) {
+            brew install pandoc
+          }
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Build
+        run: dotnet build src --configuration Release
+
+      - name: Test
+        run: dotnet test src --configuration Release --no-build --no-restore
+
+      - name: Upload snapshot diffs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: received
+          path: '**/*.received.*'
+          if-no-files-found: ignore
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: nugets
+          path: nugets/*.nupkg
+          if-no-files-found: ignore
