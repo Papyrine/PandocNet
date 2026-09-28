@@ -18,6 +18,6 @@
     <SponsorExemption Include="OpenSource" Message="Open source projects that do not generate revenue are exempt. Voluntary donations and sponsorships are not revenue." MaxTermMonths="12" />
     <PackageVersion Include="Verify.DiffPlex" Version="3.3.1" />
     <PackageVersion Include="Verify.TUnit" Version="33.1.5" />
-    <PackageVersion Include="TUnit" Version="1.70.1" />
+    <PackageVersion Include="TUnit" Version="1.71.0" />
   </ItemGroup>
 </Project>
