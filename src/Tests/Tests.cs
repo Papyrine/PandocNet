@@ -1,4 +1,6 @@
-﻿[TestFixture]
+namespace PandocTests;
+
+[NotInParallel]
 public class Tests
 {
     [Test]
@@ -126,13 +128,13 @@ public class Tests
     }
 
     [Test]
-    public void ErrorCodeThrows()
+    public async Task ErrorCodeThrows()
     {
-        var exception = Assert.ThrowsAsync<Exception>(
+        var exception = await Assert.ThrowsExactlyAsync<Exception>(
             () => PandocInstance.ConvertToText<JsonIn, HtmlOut>("not valid json"));
 
         // CheckErrorCodes formats the mapped error type, the command, and stderr
-        Assert.That(exception!.Message, Does.Contain("pandoc --output=- --from=json --to=html"));
+        await Assert.That(exception!.Message).Contains("pandoc --output=- --from=json --to=html");
     }
 
     [Test]

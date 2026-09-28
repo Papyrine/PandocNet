@@ -1,8 +1,8 @@
-[TestFixture]
+[NotInParallel]
 public class OptionsTests
 {
     [Test]
-    public void OutVariablesJson()
+    public async Task OutVariablesJson()
     {
         var options = new HtmlOut
         {
@@ -15,12 +15,12 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--variable-json=foo:false"));
-        Assert.That(args, Does.Contain("--variable-json=colors:[\"red\",\"green\"]"));
+        await Assert.That(args).Contains("--variable-json=foo:false");
+        await Assert.That(args).Contains("--variable-json=colors:[\"red\",\"green\"]");
     }
 
     [Test]
-    public void OutMetadata()
+    public async Task OutMetadata()
     {
         var options = new HtmlOut
         {
@@ -33,12 +33,12 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--metadata=title:My Document"));
-        Assert.That(args, Does.Contain("--metadata=author:Jane"));
+        await Assert.That(args).Contains("--metadata=title:My Document");
+        await Assert.That(args).Contains("--metadata=author:Jane");
     }
 
     [Test]
-    public void OutMetadataFile()
+    public async Task OutMetadataFile()
     {
         var options = new HtmlOut
         {
@@ -47,11 +47,11 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--metadata-file=meta.yaml"));
+        await Assert.That(args).Contains("--metadata-file=meta.yaml");
     }
 
     [Test]
-    public void OutVariables()
+    public async Task OutVariables()
     {
         var options = new HtmlOut
         {
@@ -63,11 +63,11 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--variable=margin-top:1in"));
+        await Assert.That(args).Contains("--variable=margin-top:1in");
     }
 
     [Test]
-    public void InMetadata()
+    public async Task InMetadata()
     {
         var options = new CommonMarkIn
         {
@@ -80,12 +80,12 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--metadata=title:Test"));
-        Assert.That(args, Does.Contain("--metadata=draft:true"));
+        await Assert.That(args).Contains("--metadata=title:Test");
+        await Assert.That(args).Contains("--metadata=draft:true");
     }
 
     [Test]
-    public void InMetadataFile()
+    public async Task InMetadataFile()
     {
         var options = new CommonMarkIn
         {
@@ -94,11 +94,11 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--metadata-file=metadata.yaml"));
+        await Assert.That(args).Contains("--metadata-file=metadata.yaml");
     }
 
     [Test]
-    public void InFileScope()
+    public async Task InFileScope()
     {
         var options = new CommonMarkIn
         {
@@ -107,11 +107,11 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--file-scope"));
+        await Assert.That(args).Contains("--file-scope");
     }
 
     [Test]
-    public void InTrace()
+    public async Task InTrace()
     {
         var options = new CommonMarkIn
         {
@@ -120,35 +120,35 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--trace"));
+        await Assert.That(args).Contains("--trace");
     }
 
     [Test]
-    public void GlobalVerbose()
+    public async Task GlobalVerbose()
     {
         var args = Options.GetArguments(new Options { Verbose = true }).ToList();
 
-        Assert.That(args, Does.Contain("--verbose"));
+        await Assert.That(args).Contains("--verbose");
     }
 
     [Test]
-    public void GlobalQuiet()
+    public async Task GlobalQuiet()
     {
         var args = Options.GetArguments(new Options { Quiet = true }).ToList();
 
-        Assert.That(args, Does.Contain("--quiet"));
+        await Assert.That(args).Contains("--quiet");
     }
 
     [Test]
-    public void GlobalFailIfWarnings()
+    public async Task GlobalFailIfWarnings()
     {
         var args = Options.GetArguments(new Options { FailIfWarnings = true }).ToList();
 
-        Assert.That(args, Does.Contain("--fail-if-warnings"));
+        await Assert.That(args).Contains("--fail-if-warnings");
     }
 
     [Test]
-    public void OutListOfFigures()
+    public async Task OutListOfFigures()
     {
         var options = new HtmlOut
         {
@@ -157,11 +157,11 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--list-of-figures"));
+        await Assert.That(args).Contains("--list-of-figures");
     }
 
     [Test]
-    public void OutListOfTables()
+    public async Task OutListOfTables()
     {
         var options = new HtmlOut
         {
@@ -170,11 +170,11 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--list-of-tables"));
+        await Assert.That(args).Contains("--list-of-tables");
     }
 
     [Test]
-    public void OutFigureCaptionPosition()
+    public async Task OutFigureCaptionPosition()
     {
         var options = new HtmlOut
         {
@@ -183,11 +183,11 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--figure-caption-position=above"));
+        await Assert.That(args).Contains("--figure-caption-position=above");
     }
 
     [Test]
-    public void OutTableCaptionPosition()
+    public async Task OutTableCaptionPosition()
     {
         var options = new HtmlOut
         {
@@ -196,11 +196,11 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--table-caption-position=below"));
+        await Assert.That(args).Contains("--table-caption-position=below");
     }
 
     [Test]
-    public void OutSyntaxHighlighting()
+    public async Task OutSyntaxHighlighting()
     {
         var options = new HtmlOut
         {
@@ -209,11 +209,11 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--syntax-highlighting=kate"));
+        await Assert.That(args).Contains("--syntax-highlighting=kate");
     }
 
     [Test]
-    public void HtmlEmailObfuscation()
+    public async Task HtmlEmailObfuscation()
     {
         var options = new HtmlOut
         {
@@ -222,11 +222,11 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--email-obfuscation=javascript"));
+        await Assert.That(args).Contains("--email-obfuscation=javascript");
     }
 
     [Test]
-    public void RstListTables()
+    public async Task RstListTables()
     {
         var options = new RstOut
         {
@@ -235,11 +235,11 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--list-tables"));
+        await Assert.That(args).Contains("--list-tables");
     }
 
     [Test]
-    public void PdfEngineOpt()
+    public async Task PdfEngineOpt()
     {
         var options = new PdfOut
         {
@@ -249,12 +249,12 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--pdf-engine=xelatex"));
-        Assert.That(args, Does.Contain("--pdf-engine-opt=--shell-escape"));
+        await Assert.That(args).Contains("--pdf-engine=xelatex");
+        await Assert.That(args).Contains("--pdf-engine-opt=--shell-escape");
     }
 
     [Test]
-    public void EpubSplitLevel()
+    public async Task EpubSplitLevel()
     {
         var options = new Epub3Out
         {
@@ -263,11 +263,11 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--split-level=2"));
+        await Assert.That(args).Contains("--split-level=2");
     }
 
     [Test]
-    public void EpubTitlePage()
+    public async Task EpubTitlePage()
     {
         var options = new Epub3Out
         {
@@ -276,11 +276,11 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--epub-title-page=false"));
+        await Assert.That(args).Contains("--epub-title-page=false");
     }
 
     [Test]
-    public void ChunkedHtmlSplitLevel()
+    public async Task ChunkedHtmlSplitLevel()
     {
         var options = new ChunkedHtmlOut
         {
@@ -289,11 +289,11 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--split-level=3"));
+        await Assert.That(args).Contains("--split-level=3");
     }
 
     [Test]
-    public void ChunkedHtmlChunkTemplate()
+    public async Task ChunkedHtmlChunkTemplate()
     {
         var options = new ChunkedHtmlOut
         {
@@ -302,6 +302,6 @@ public class OptionsTests
 
         var args = options.GetArguments().ToList();
 
-        Assert.That(args, Does.Contain("--chunk-template=%s-%i.html"));
+        await Assert.That(args).Contains("--chunk-template=%s-%i.html");
     }
 }

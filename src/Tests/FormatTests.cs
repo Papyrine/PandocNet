@@ -1,4 +1,4 @@
-[TestFixture]
+[NotInParallel]
 public class FormatTests
 {
     static readonly MethodInfo convertToText = typeof(PandocInstance)
@@ -7,26 +7,28 @@ public class FormatTests
             _.Name == "ConvertToText" &&
             _.GetParameters()[0].ParameterType == typeof(string));
 
-    static IEnumerable<Type> OutputFormats() =>
+    public static IEnumerable<Type> OutputFormats() =>
         typeof(OutOptions).Assembly
             .GetTypes()
             .Where(_ => _ is { IsAbstract: false, IsClass: true } &&
                         _.IsSubclassOf(typeof(OutOptions)))
             .OrderBy(_ => _.Name);
 
-    static IEnumerable<Type> InputFormats() =>
+    public static IEnumerable<Type> InputFormats() =>
         typeof(InOptions).Assembly
             .GetTypes()
             .Where(_ => _ is { IsAbstract: false, IsClass: true } &&
                         _.IsSubclassOf(typeof(InOptions)))
             .OrderBy(_ => _.Name);
 
-    [TestCaseSource(nameof(OutputFormats))]
+    [Test]
+
+    [MethodDataSource(nameof(OutputFormats))]
     public async Task ConvertToOutput(Type outputType)
     {
         if (outputType == typeof(PdfOut))
         {
-            Assert.Ignore("Requires PDF engine");
+            Skip.Test("Requires PDF engine");
             return;
         }
 
@@ -35,7 +37,9 @@ public class FormatTests
         await task;
     }
 
-    [TestCaseSource(nameof(InputFormats))]
+    [Test]
+
+    [MethodDataSource(nameof(InputFormats))]
     public async Task ConvertFromInput(Type inputType)
     {
         if (inputType == typeof(DocxIn) ||
@@ -44,7 +48,7 @@ public class FormatTests
             inputType == typeof(OdtIn) ||
             inputType == typeof(XlsxIn))
         {
-            Assert.Ignore("Requires binary file input");
+            Skip.Test("Requires binary file input");
             return;
         }
 
@@ -57,7 +61,7 @@ public class FormatTests
             inputType == typeof(RisIn) ||
             inputType == typeof(XmlIn))
         {
-            Assert.Ignore("Requires structured input");
+            Skip.Test("Requires structured input");
             return;
         }
 

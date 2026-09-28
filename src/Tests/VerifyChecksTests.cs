@@ -1,4 +1,4 @@
-﻿[TestFixture]
+[NotInParallel]
 public class VerifyChecksTests
 {
     [Test]

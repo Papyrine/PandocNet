@@ -1,6 +1,6 @@
-﻿// ReSharper disable UnusedVariable
+// ReSharper disable UnusedVariable
 
-[TestFixture]
+[NotInParallel]
 public class Samples
 {
     [Test]
@@ -72,7 +72,7 @@ public class Samples
 
         #endregion
 
-        Assert.That(result.Value, Is.Not.Empty);
+        await Assert.That(result.Value).IsNotEmpty();
     }
 
     [Test]
@@ -97,7 +97,7 @@ public class Samples
 
         #endregion
 
-        Assert.That(result.Value, Is.Not.Empty);
+        await Assert.That(result.Value).IsNotEmpty();
     }
 
     [Test]

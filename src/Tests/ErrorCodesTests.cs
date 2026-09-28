@@ -1,14 +1,15 @@
-[TestFixture]
+[NotInParallel]
 public class ErrorCodesTests
 {
-    [TestCase(6, "PandocOptionError")]
-    [TestCase(22, "PandocUnknownWriterError")]
-    [TestCase(64, "PandocParseError")]
-    [TestCase(99, "PandocResourceNotFound")]
-    public void KnownCodesAreMapped(int exitCode, string expected) =>
-        Assert.That(ErrorCodes.GetErrorType(exitCode), Is.EqualTo(expected));
+    [Test]
+    [Arguments(6, "PandocOptionError")]
+    [Arguments(22, "PandocUnknownWriterError")]
+    [Arguments(64, "PandocParseError")]
+    [Arguments(99, "PandocResourceNotFound")]
+    public async Task KnownCodesAreMapped(int exitCode, string expected) =>
+        await Assert.That(ErrorCodes.GetErrorType(exitCode)).IsEqualTo(expected);
 
     [Test]
-    public void UnknownCodeFallsBack() =>
-        Assert.That(ErrorCodes.GetErrorType(1234), Is.EqualTo("PandocUnknownError"));
+    public async Task UnknownCodeFallsBack() =>
+        await Assert.That(ErrorCodes.GetErrorType(1234)).IsEqualTo("PandocUnknownError");
 }

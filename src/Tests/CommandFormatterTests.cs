@@ -1,53 +1,37 @@
-[TestFixture]
+[NotInParallel]
 public class CommandFormatterTests
 {
     [Test]
-    public void SimpleArgumentsAreNotQuoted() =>
-        Assert.That(
-            CommandFormatter.Build("pandoc", ["--from=commonmark", "--to=html"]),
-            Is.EqualTo("pandoc --from=commonmark --to=html"));
+    public async Task SimpleArgumentsAreNotQuoted() =>
+        await Assert.That(CommandFormatter.Build("pandoc", ["--from=commonmark", "--to=html"])).IsEqualTo("pandoc --from=commonmark --to=html");
 
     [Test]
-    public void NoArguments() =>
-        Assert.That(
-            CommandFormatter.Build("pandoc", []),
-            Is.EqualTo("pandoc"));
+    public async Task NoArguments() =>
+        await Assert.That(CommandFormatter.Build("pandoc", [])).IsEqualTo("pandoc");
 
     [Test]
-    public void ArgumentWithSpaceIsQuoted() =>
-        Assert.That(
-            CommandFormatter.Build("pandoc", ["--data-dir=C:\\foo bar"]),
-            Is.EqualTo("pandoc \"--data-dir=C:\\foo bar\""));
+    public async Task ArgumentWithSpaceIsQuoted() =>
+        await Assert.That(CommandFormatter.Build("pandoc", ["--data-dir=C:\\foo bar"])).IsEqualTo("pandoc \"--data-dir=C:\\foo bar\"");
 
     [Test]
-    public void EmptyArgumentIsQuoted() =>
-        Assert.That(
-            CommandFormatter.Build("pandoc", [""]),
-            Is.EqualTo("pandoc \"\""));
+    public async Task EmptyArgumentIsQuoted() =>
+        await Assert.That(CommandFormatter.Build("pandoc", [""])).IsEqualTo("pandoc \"\"");
 
     [Test]
-    public void EmbeddedQuoteIsEscaped() =>
-        Assert.That(
-            CommandFormatter.Build("pandoc", ["a\"b"]),
-            Is.EqualTo("pandoc \"a\\\"b\""));
+    public async Task EmbeddedQuoteIsEscaped() =>
+        await Assert.That(CommandFormatter.Build("pandoc", ["a\"b"])).IsEqualTo("pandoc \"a\\\"b\"");
 
     [Test]
-    public void TrailingBackslashIsDoubledWhenQuoted() =>
+    public async Task TrailingBackslashIsDoubledWhenQuoted() =>
         // space forces quoting; the trailing backslash must be doubled so it
         // is not read as escaping the closing quote
-        Assert.That(
-            CommandFormatter.Build("pandoc", ["a \\"]),
-            Is.EqualTo("pandoc \"a \\\\\""));
+        await Assert.That(CommandFormatter.Build("pandoc", ["a \\"])).IsEqualTo("pandoc \"a \\\\\"");
 
     [Test]
-    public void BackslashBeforeQuoteIsEscaped() =>
-        Assert.That(
-            CommandFormatter.Build("pandoc", ["a\\\"b"]),
-            Is.EqualTo("pandoc \"a\\\\\\\"b\""));
+    public async Task BackslashBeforeQuoteIsEscaped() =>
+        await Assert.That(CommandFormatter.Build("pandoc", ["a\\\"b"])).IsEqualTo("pandoc \"a\\\\\\\"b\"");
 
     [Test]
-    public void InteriorBackslashIsNotDoubled() =>
-        Assert.That(
-            CommandFormatter.Build("pandoc", ["a\\b c"]),
-            Is.EqualTo("pandoc \"a\\b c\""));
+    public async Task InteriorBackslashIsNotDoubled() =>
+        await Assert.That(CommandFormatter.Build("pandoc", ["a\\b c"])).IsEqualTo("pandoc \"a\\b c\"");
 }
