@@ -42,7 +42,7 @@ public class Tests
     [Explicit]
     public async Task BinaryToText()
     {
-        var result = await PandocInstance.Convert<DocxIn, HtmlOut>("sample.docx", "output.html");
+        var result = await PandocInstance.Convert<DocxIn, HtmlOut>(ProjectFiles.sample_docx.Path, "output.html");
 
         await VerifyFile("output.html")
             .AppendValue("command", result.Command);
@@ -52,7 +52,7 @@ public class Tests
     public async Task DataDirectory()
     {
         var result = await PandocInstance.Convert<CommonMarkIn, HtmlOut>(
-            "sample.md",
+            ProjectFiles.sample_md.Path,
             "output.html",
             options: new()
             {
@@ -66,7 +66,7 @@ public class Tests
     [Test]
     public async Task Files()
     {
-        var result = await PandocInstance.Convert<CommonMarkIn, HtmlOut>("sample.md", "output.html");
+        var result = await PandocInstance.Convert<CommonMarkIn, HtmlOut>(ProjectFiles.sample_md.Path, "output.html");
 
         await VerifyFile("output.html")
             .AppendValue("command", result.Command);
@@ -75,7 +75,7 @@ public class Tests
     [Test]
     public async Task Streams()
     {
-        var result = await PandocInstance.Convert<CommonMarkIn, HtmlOut>("sample.md", "output.html");
+        var result = await PandocInstance.Convert<CommonMarkIn, HtmlOut>(ProjectFiles.sample_md.Path, "output.html");
 
         await VerifyFile("output.html")
             .AppendValue("command", result.Command);
@@ -86,7 +86,7 @@ public class Tests
     {
         Pandoc.Result result;
         {
-            await using var inStream = File.OpenRead("sample.md");
+            await using var inStream = ProjectFiles.sample_md.OpenRead();
             await using var outStream = File.OpenWrite("output.html");
             result = await PandocInstance.Convert<CommonMarkIn, HtmlOut>(inStream, outStream);
         }
