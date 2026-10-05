@@ -16,7 +16,7 @@
     <SponsorExemption Include="MaintainerConsulting" Message="Organizations that have engaged any of the core maintainers of Papyrine in consulting work could be exempt from the Maintenance Fee for 6 months from the final date of that work." MaxTermMonths="6" />
     <SponsorExemption Include="SmallRevenue" Message="Consumers under US$10,000 annual gross revenue are exempt." MaxTermMonths="12" />
     <SponsorExemption Include="OpenSource" Message="Open source projects that do not generate revenue are exempt. Voluntary donations and sponsorships are not revenue." MaxTermMonths="12" />
-    <PackageVersion Include="Verify.TUnit" Version="33.2.0" />
+    <PackageVersion Include="Verify.TUnit" Version="33.3.0" />
     <PackageVersion Include="TUnit" Version="1.72.16" />
   </ItemGroup>
 </Project>
