@@ -4,7 +4,7 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Argon" Version="0.38.0" />
+    <PackageVersion Include="Argon" Version="0.38.2" />
     <PackageVersion Include="MarkdownSnippets.MsBuild" Version="28.5.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.12" />
@@ -16,7 +16,7 @@
     <SponsorExemption Include="MaintainerConsulting" Message="Organizations that have engaged any of the core maintainers of Papyrine in consulting work could be exempt from the Maintenance Fee for 6 months from the final date of that work." MaxTermMonths="6" />
     <SponsorExemption Include="SmallRevenue" Message="Consumers under US$10,000 annual gross revenue are exempt." MaxTermMonths="12" />
     <SponsorExemption Include="OpenSource" Message="Open source projects that do not generate revenue are exempt. Voluntary donations and sponsorships are not revenue." MaxTermMonths="12" />
-    <PackageVersion Include="Verify.TUnit" Version="33.3.2-beta.1" />
-    <PackageVersion Include="TUnit" Version="1.72.16" />
+    <PackageVersion Include="Verify.TUnit" Version="33.3.2" />
+    <PackageVersion Include="TUnit" Version="1.73.5" />
   </ItemGroup>
 </Project>
