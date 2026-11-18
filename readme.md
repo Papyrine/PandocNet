@@ -153,7 +153,8 @@ var result = await engine.ConvertToText<CommonMarkIn, HtmlOut>(
 
 ### Inputs
 
-#### AsciiDocIn<!-- include: input. path: /src/input.include.md -->
+<!-- include: input. path: /src/input.include.md -->
+#### AsciiDocIn
 
 ```cs
 /// <summary>
@@ -1167,7 +1168,8 @@ public class PhpMdExtraIn :
 
 ### Outputs
 
-#### AnsiOut<!-- include: output. path: /src/output.include.md -->
+<!-- include: output. path: /src/output.include.md -->
+#### AnsiOut
 
 ```cs
 /// <summary>
